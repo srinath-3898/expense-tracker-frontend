@@ -1,0 +1,48 @@
+.container {
+  display: flex;
+  flex-direction: column;
+}
+
+.expense_form {
+  width: 50%;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.input_controller {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+}
+
+.expenses_table {
+  width: 50%;
+  margin: 0 auto;
+  margin-top: 30px;
+  margin-bottom: 30px;
+}
+
+.table_header,
+.expense {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1.5fr 1.5fr;
+  align-items: center;
+  padding: 10px;
+  background-color: rgb(150, 150, 150);
+  border-radius: 3px;
+  gap: 10px;
+}
+
+.table_body {
+  width: 100%;
+  margin-top: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.expense {
+  background-color: rgb(246, 246, 246);
+}
