@@ -1,68 +1,69 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import styles from "./Expenses.module.css";
+import { useDispatch, useSelector } from "react-redux";
+import { getAllExpenses } from "@/store/expenses/expensesActions";
+import {
+  addExpense,
+  deleteExpense,
+  editExpense,
+} from "@/store/expense/expenseActions";
+import Loading from "./loading";
 
 const Expenses = () => {
-  const [expenses, setExpenses] = useState(null);
+  const dispatch = useDispatch();
 
-  const [expenseFormData, setExpenseFormData] = useState({
+  const { loading, expenses, error } = useSelector((state) => state.expenses);
+
+  const [expense, setExpense] = useState({
     amount: 0,
     category: "movies",
     description: "",
   });
 
-  const [isEditExpense, setIsEditExpense] = useState(false);
+  const [expenseId, setExpenseId] = useState(null);
 
   const handleInputChange = (event) => {
     const { name, value } = event.target;
-    setExpenseFormData((prevState) => ({ ...prevState, [name]: value }));
+    setExpense((prevState) => ({ ...prevState, [name]: value }));
   };
 
   const handleAddExpense = (event) => {
     event.preventDefault();
-    const expenses = JSON.parse(localStorage.getItem("expenses"));
-    if (expenses) {
-      expenses.push(expenseFormData);
-      setExpenses(expenses);
-      localStorage.setItem("expenses", JSON.stringify(expenses));
-    } else {
-      const expenses = [];
-      expenses.push(expenseFormData);
-      setExpenses(expenses);
-      localStorage.setItem("expenses", JSON.stringify(expenses));
-    }
-    setExpenseFormData({ amount: 0, category: "movies", description: "" });
-    setIsEditExpense(false);
+    dispatch(addExpense(expense)).then(() => {
+      dispatch(getAllExpenses());
+    });
+    setExpense({ amount: 0, category: "movies", description: "" });
   };
 
-  const handleEditExpense = (index) => {
-    setIsEditExpense(true);
-    for (let i = 0; i < expenses?.length; i++) {
-      if (i === index) {
-        setExpenseFormData(expenses[i]);
-        break;
-      }
-    }
+  const handleEditExpense = (event) => {
+    event.preventDefault();
+    dispatch(editExpense({ expenseId, expense })).then(() => {
+      dispatch(getAllExpenses());
+    });
   };
 
-  const handleDeleteExpense = (index) => {
-    const updatedExpenses = expenses.filter((expense, i) => i !== index);
-    setExpenses(updatedExpenses);
-    if (updatedExpenses?.length > 0) {
-      localStorage.setItem("expenses", JSON.stringify(updatedExpenses));
-    } else {
-      localStorage.clear();
-    }
+  const handleCancel = () => {
+    setExpenseId(null);
+    setExpense({ amount: 0, category: "movies", description: "" });
+  };
+
+  const handleDeleteExpense = (expenseId) => {
+    dispatch(deleteExpense(expenseId)).then(() => {
+      dispatch(getAllExpenses());
+    });
   };
 
   useEffect(() => {
-    const expenses = JSON.parse(localStorage.getItem("expenses"));
-    setExpenses(expenses);
+    dispatch(getAllExpenses());
   }, []);
 
   return (
     <div className={styles.container}>
-      <form className={styles.expense_form} onSubmit={handleAddExpense}>
+      <form
+        className={styles.expense_form}
+        onSubmit={expenseId === null ? handleAddExpense : handleEditExpense}
+      >
         <h1>Expense Form</h1>
         <div className={styles.input_controller}>
           <p>Amount</p>
@@ -70,7 +71,7 @@ const Expenses = () => {
             type="number"
             placeholder="Please enter expense ammount"
             name="amount"
-            value={expenseFormData.amount}
+            value={expense.amount}
             onChange={handleInputChange}
           />
         </div>
@@ -78,10 +79,10 @@ const Expenses = () => {
           <p>Category</p>
           <select
             name="category"
-            value={expenseFormData.category}
+            value={expense.category}
             onChange={handleInputChange}
           >
-            <option value="movie">Movies</option>
+            <option value="movies">Movies</option>
             <option value="food">Food</option>
             <option value="fuel">Fuel</option>
             <option value="books">Books</option>
@@ -92,41 +93,78 @@ const Expenses = () => {
           <p>Description</p>
           <textarea
             name="description"
-            value={expenseFormData.description}
+            value={expense.description}
             placeholder="Please enter the description of the expense"
             onChange={handleInputChange}
             required
           ></textarea>
         </div>
         <button type="submit">
-          {isEditExpense ? "Edit Expense" : "Add Expense"}
+          {expenseId !== null ? "Edit Expense" : "Add Expense"}
         </button>
-        {isEditExpense ? (
-          <button onClick={() => setIsEditExpense(false)}>Cancel</button>
+        {expenseId !== null ? (
+          <button onClick={handleCancel}>Cancel</button>
         ) : (
           <></>
         )}
       </form>
-      {expenses && expenses?.length > 0 ? (
+      {loading && !expenses && !error ? <Loading /> : <></>}
+      {!loading && expenses && !error ? (
         <div className={styles.expenses_table}>
-          <div className={styles.table_header}>
-            <p>Description</p>
-            <p>Category</p>
-            <p>Amount</p>
-            <p>Edit</p>
-            <p>Delete</p>
+          <div className={styles.table_name}>
+            <h2>Expenses Table</h2>
           </div>
-          <div className={styles.table_body}>
-            {expenses?.map((expense, i) => (
-              <div className={styles?.expense} key={i}>
-                <p>{expense.description}</p>
-                <p>{expense.category}</p>
-                <p>{expense.amount}</p>
-                <button onClick={() => handleEditExpense(i)}>Edit</button>
-                <button onClick={() => handleDeleteExpense(i)}>Delete</button>
+          {expenses && expenses?.length > 0 ? (
+            <>
+              <div className={styles.table_header}>
+                <p>Description</p>
+                <p>Category</p>
+                <p>Amount</p>
+                <p>Edit</p>
+                <p>Delete</p>
               </div>
-            ))}
-          </div>
+              <div className={styles.table_body}>
+                {expenses?.map((expense) => (
+                  <div className={styles?.expense} key={expense?._id}>
+                    <p>{expense?.description}</p>
+                    <p>
+                      {expense?.category[0]?.toUpperCase() +
+                        expense?.category?.slice(1)}
+                    </p>
+                    <p>{expense?.amount}</p>
+                    <button
+                      onClick={() => {
+                        setExpenseId(expense?._id);
+                        setExpense({
+                          amount: expense?.amount,
+                          category: expense?.category,
+                          description: expense?.description,
+                        });
+                      }}
+                    >
+                      Edit
+                    </button>
+                    <button onClick={() => handleDeleteExpense(expense?._id)}>
+                      Delete
+                    </button>
+                  </div>
+                ))}
+              </div>
+            </>
+          ) : (
+            <div className={styles.no_data}>
+              <p>No expenses found</p>
+            </div>
+          )}
+        </div>
+      ) : (
+        <></>
+      )}
+      {!loading && !expenses && error ? (
+        <div className={styles.error}>
+          <p>{error}</p>
+          <p>Error Fetching expenses</p>
+          <p>Please try again...</p>
         </div>
       ) : (
         <></>
