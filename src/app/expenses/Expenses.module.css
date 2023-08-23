@@ -1,6 +1,7 @@
 .container {
   display: flex;
   flex-direction: column;
+  gap: 20px;
 }
 
 .expense_form {
@@ -18,14 +19,10 @@
 
 .expenses_table {
   width: 50%;
-  margin: 0 auto;
-  margin-top: 30px;
-  margin-bottom: 30px;
-}
-
-.table_name {
-  margin-top: 30px;
-  margin-bottom: 30px;
+  margin: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 
 .table_header,
@@ -42,7 +39,6 @@
 
 .table_body {
   width: 100%;
-  margin-top: 10px;
   display: flex;
   flex-direction: column;
   gap: 10px;
@@ -63,6 +59,5 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 20px;
   color: red;
 }

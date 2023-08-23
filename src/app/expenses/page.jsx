@@ -9,6 +9,7 @@ import {
   editExpense,
 } from "@/store/expense/expenseActions";
 import Loading from "./loading";
+import Spinner from "@/components/spinner/Spinner";
 
 const Expenses = () => {
   const dispatch = useDispatch();
@@ -99,21 +100,31 @@ const Expenses = () => {
             required
           ></textarea>
         </div>
-        <button type="submit">
-          {expenseId !== null ? "Edit Expense" : "Add Expense"}
+        <button type="submit" disabled={loading}>
+          {loading ? (
+            <Spinner size={20} color="white" />
+          ) : expenseId !== null ? (
+            "Edit Expense"
+          ) : (
+            "Add Expense"
+          )}
         </button>
         {expenseId !== null ? (
-          <button onClick={handleCancel}>Cancel</button>
+          <button onClick={handleCancel} disabled={loading}>
+            Cancel
+          </button>
         ) : (
           <></>
         )}
       </form>
-      {loading && !expenses && !error ? <Loading /> : <></>}
+      {loading && !expenses && !error ? (
+        <Loading fontSize={50} color={"black"} />
+      ) : (
+        <></>
+      )}
       {!loading && expenses && !error ? (
         <div className={styles.expenses_table}>
-          <div className={styles.table_name}>
-            <h2>Expenses Table</h2>
-          </div>
+          <h2>Expenses</h2>
           {expenses && expenses?.length > 0 ? (
             <>
               <div className={styles.table_header}>
@@ -125,7 +136,7 @@ const Expenses = () => {
               </div>
               <div className={styles.table_body}>
                 {expenses?.map((expense) => (
-                  <div className={styles?.expense} key={expense?._id}>
+                  <div className={styles?.expense} key={expense?.id}>
                     <p>{expense?.description}</p>
                     <p>
                       {expense?.category[0]?.toUpperCase() +
@@ -134,7 +145,7 @@ const Expenses = () => {
                     <p>{expense?.amount}</p>
                     <button
                       onClick={() => {
-                        setExpenseId(expense?._id);
+                        setExpenseId(expense?.id);
                         setExpense({
                           amount: expense?.amount,
                           category: expense?.category,
@@ -144,8 +155,11 @@ const Expenses = () => {
                     >
                       Edit
                     </button>
-                    <button onClick={() => handleDeleteExpense(expense?._id)}>
-                      Delete
+                    <button
+                      onClick={() => handleDeleteExpense(expense?.id)}
+                      disabled={loading}
+                    >
+                      {loading ? <Spinner size={20} color="white" /> : "Delete"}
                     </button>
                   </div>
                 ))}

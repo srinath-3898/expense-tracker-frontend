@@ -41,6 +41,11 @@ button:hover {
   cursor: pointer;
 }
 
+button:disabled {
+  cursor: not-allowed;
+  background-color: rgb(116, 116, 116);
+}
+
 textarea {
   font-family: Arial, Helvetica, sans-serif;
 }

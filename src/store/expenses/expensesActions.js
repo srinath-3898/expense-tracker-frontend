@@ -6,7 +6,7 @@ export const getAllExpenses = createAsyncThunk(
   async () => {
     try {
       const response = await axios.get(
-        "https://crudcrud.com/api/c9b781c4083948369883326ba1dcc0b1/expenses"
+        "http://localhost:8080/expense/expenses"
       );
       return response;
     } catch (error) {

@@ -6,7 +6,7 @@ export const addExpense = createAsyncThunk(
   async (expense) => {
     try {
       const response = await axios.post(
-        "https://crudcrud.com/api/c9b781c4083948369883326ba1dcc0b1/expenses",
+        "http://localhost:8080/expense/add-expense",
         expense
       );
       return response;
@@ -20,8 +20,8 @@ export const editExpense = createAsyncThunk(
   "expense/editExpense",
   async ({ expenseId, expense }) => {
     try {
-      const response = await axios.put(
-        `https://crudcrud.com/api/c9b781c4083948369883326ba1dcc0b1/expenses/${expenseId}`,
+      const response = await axios.post(
+        `http://localhost:8080/expense/edit-expense/${expenseId}`,
         expense
       );
       return response;
@@ -34,10 +34,9 @@ export const editExpense = createAsyncThunk(
 export const deleteExpense = createAsyncThunk(
   "expense/deleteExpense",
   async (expenseId) => {
-    console.log(expenseId);
     try {
       const response = await axios.delete(
-        `https://crudcrud.com/api/c9b781c4083948369883326ba1dcc0b1/expenses/${expenseId}`
+        `http://localhost:8080/expense/delete-expense/${expenseId}`
       );
       return response;
     } catch (error) {

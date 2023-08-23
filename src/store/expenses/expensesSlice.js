@@ -12,7 +12,7 @@ export const expensesSlice = createSlice({
       })
       .addCase(getAllExpenses.fulfilled, (state, { payload }) => {
         state.loading = false;
-        state.expenses = payload?.data;
+        state.expenses = payload?.data?.data;
         state.error = null;
       })
       .addCase(getAllExpenses.rejected, (state, { error }) => {
