@@ -1,4 +1,4 @@
-import { signup } from "./authActions";
+import { signin, signup } from "./authActions";
 
 const { createSlice } = require("@reduxjs/toolkit");
 
@@ -27,6 +27,24 @@ const authSlice = createSlice({
         state.message = payload?.data?.message;
       })
       .addCase(signup.rejected, (state, error) => {
+        state.loading = false;
+        if (error?.payload) {
+          state.error = error?.payload?.data?.message;
+        } else {
+          state.error = error?.error?.message;
+        }
+      });
+
+    //user signin
+    builder
+      .addCase(signin.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(signin.fulfilled, (state, { payload }) => {
+        state.loading = false;
+        state.message = payload?.data?.message;
+      })
+      .addCase(signin.rejected, (state, error) => {
         state.loading = false;
         if (error?.payload) {
           state.error = error?.payload?.data?.message;

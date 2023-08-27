@@ -18,3 +18,21 @@ export const signup = createAsyncThunk(
     }
   }
 );
+
+export const signin = createAsyncThunk(
+  "auth/signin",
+  async (user, { rejectWithValue }) => {
+    try {
+      const response = await axios.post(
+        "http://localhost:8080/user/signin",
+        user
+      );
+      return response;
+    } catch (error) {
+      if (!error.response) {
+        throw error;
+      }
+      return rejectWithValue(error.response);
+    }
+  }
+);

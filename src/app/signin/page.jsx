@@ -1,17 +1,17 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import styles from "./Signup.module.css";
+import styles from "./Signin.module.css";
 import { useDispatch, useSelector } from "react-redux";
-import { signup } from "@/store/auth/authActions";
+import { signin } from "@/store/auth/authActions";
+import { Spin, message } from "antd";
 import {
   CheckCircleFilled,
   CloseCircleFilled,
   LoadingOutlined,
 } from "@ant-design/icons";
-import { Spin, message } from "antd";
 import { resetAuthData } from "@/store/auth/authSlice";
 
-const Signup = () => {
+const Signin = () => {
   const dispatch = useDispatch();
 
   const {
@@ -20,13 +20,7 @@ const Signup = () => {
     error,
   } = useSelector((state) => state.auth);
 
-  const [user, setUser] = useState({
-    fullName: "",
-    email: "",
-    mobile: "",
-    password: "",
-  });
-  const [confirmPassword, setConfirmPassword] = useState("");
+  const [user, setUser] = useState({ email: "", password: "" });
   const [messageApi, contextHolder] = message.useMessage();
 
   const handleChange = (event) => {
@@ -34,8 +28,8 @@ const Signup = () => {
     setUser((prevState) => ({ ...prevState, [name]: value }));
   };
 
-  const handleSignup = () => {
-    dispatch(signup(user));
+  const handleSigin = () => {
+    dispatch(signin(user));
   };
 
   useEffect(() => {
@@ -55,21 +49,11 @@ const Signup = () => {
   return (
     <>
       {contextHolder}
-      <div className={styles.container}>
-        <div className={styles.container_1}>
-          <h1>Sign up</h1>
+      <div className={styles.conatiner}>
+        <div className={styles.conatiner_1}>
+          <h1>Login</h1>
         </div>
         <div className={styles.container_2}>
-          <div className={styles.input_controller}>
-            <p>Full name</p>
-            <input
-              type="text"
-              placeholder="Please enter you full name"
-              name="fullName"
-              value={user.fullName}
-              onChange={handleChange}
-            />
-          </div>
           <div className={styles.input_controller}>
             <p>Email</p>
             <input
@@ -77,16 +61,6 @@ const Signup = () => {
               placeholder="Please enter you email"
               name="email"
               value={user.email}
-              onChange={handleChange}
-            />
-          </div>
-          <div className={styles.input_controller}>
-            <p>Mobile</p>
-            <input
-              type="text"
-              placeholder="Please enter your mobile number"
-              name="mobile"
-              value={user.mobile}
               onChange={handleChange}
             />
           </div>
@@ -100,17 +74,8 @@ const Signup = () => {
               onChange={handleChange}
             />
           </div>
-          <div className={styles.input_controller}>
-            <p>Confirm password</p>
-            <input
-              type="password"
-              placeholder="Please confirm your password"
-              value={confirmPassword}
-              onChange={(event) => setConfirmPassword(event.target.value)}
-            />
-          </div>
-          <div className={styles.signup_button}>
-            <button onClick={handleSignup} disabled={loading}>
+          <div className={styles.signin_button}>
+            <button onClick={handleSigin}>
               {loading ? (
                 <Spin
                   indicator={
@@ -120,7 +85,7 @@ const Signup = () => {
                   }
                 />
               ) : (
-                "Signup"
+                "Signin"
               )}
             </button>
           </div>
@@ -130,4 +95,4 @@ const Signup = () => {
   );
 };
 
-export default Signup;
+export default Signin;

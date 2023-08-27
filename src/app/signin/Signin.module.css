@@ -1,12 +1,12 @@
-.container {
-  width: 35%;
+.conatiner {
+  width: 25%;
   margin: auto;
   display: flex;
   flex-direction: column;
   gap: 30px;
 }
 
-.container_1 {
+.conatiner_1 {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -23,12 +23,12 @@
   grid-template-columns: 1fr 2fr;
 }
 
-.signup_button {
+.signin_button {
   width: 100%;
   display: flex;
   justify-content: center;
 }
 
-.signup_button button {
+.signin_button button {
   width: 100%;
 }

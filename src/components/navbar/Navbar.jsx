@@ -5,8 +5,9 @@ import Image from "next/image";
 
 const links = [
   { id: 1, title: "Home", url: "/" },
-  { id: 2, title: "Expenses", url: "/expenses" },
-  { id: 3, title: "Signup", url: "signup" },
+  { id: 2, title: "Signin", url: "/signin" },
+  { id: 3, title: "Signup", url: "/signup" },
+  { id: 4, title: "Expenses", url: "/expenses" },
 ];
 
 const Navbar = () => {
