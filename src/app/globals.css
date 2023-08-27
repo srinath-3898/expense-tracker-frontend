@@ -29,6 +29,10 @@ textarea:focus-visible {
   outline: 1px solid rgb(222, 222, 222);
 }
 
+textarea {
+  font-family: Arial, Helvetica, sans-serif;
+}
+
 button {
   border: none;
   background-color: black;
@@ -42,10 +46,19 @@ button:hover {
 }
 
 button:disabled {
+  background-color: #cdcdcd;
   cursor: not-allowed;
-  background-color: rgb(116, 116, 116);
 }
 
-textarea {
-  font-family: Arial, Helvetica, sans-serif;
+.ant-btn-primary {
+  background-color: #000000;
+}
+
+.ant-btn-primary:hover {
+  background-color: #000000 !important;
+}
+
+.ant-btn-default:hover {
+  color: #000000 !important;
+  border-color: #000000 !important;
 }

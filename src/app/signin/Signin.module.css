@@ -32,3 +32,12 @@
 .signin_button button {
   width: 100%;
 }
+
+.container_3 {
+  display: flex;
+  gap: 5px;
+}
+.container_3 a {
+  text-decoration: underline;
+  color: gray;
+}

@@ -3,7 +3,7 @@ import axios from "axios";
 
 export const addExpense = createAsyncThunk(
   "expense/addExpense",
-  async (expense) => {
+  async (expense, { rejectWithValue }) => {
     try {
       const response = await axios.post(
         "http://localhost:8080/expense/add-expense",
@@ -11,14 +11,17 @@ export const addExpense = createAsyncThunk(
       );
       return response;
     } catch (error) {
-      throw error;
+      if (!error.response) {
+        throw error;
+      }
+      return rejectWithValue(error.response);
     }
   }
 );
 
 export const editExpense = createAsyncThunk(
   "expense/editExpense",
-  async ({ expenseId, expense }) => {
+  async ({ expenseId, expense }, { rejectWithValue }) => {
     try {
       const response = await axios.post(
         `http://localhost:8080/expense/edit-expense/${expenseId}`,
@@ -26,21 +29,27 @@ export const editExpense = createAsyncThunk(
       );
       return response;
     } catch (error) {
-      throw error;
+      if (!error.response) {
+        throw error;
+      }
+      return rejectWithValue(error.response);
     }
   }
 );
 
 export const deleteExpense = createAsyncThunk(
   "expense/deleteExpense",
-  async (expenseId) => {
+  async (expenseId, { rejectWithValue }) => {
     try {
       const response = await axios.delete(
         `http://localhost:8080/expense/delete-expense/${expenseId}`
       );
       return response;
     } catch (error) {
-      throw error;
+      if (!error.response) {
+        throw error;
+      }
+      return rejectWithValue(error.response);
     }
   }
 );

@@ -10,6 +10,7 @@ import {
   LoadingOutlined,
 } from "@ant-design/icons";
 import { resetAuthData } from "@/store/auth/authSlice";
+import Link from "next/link";
 
 const Signin = () => {
   const dispatch = useDispatch();
@@ -89,6 +90,11 @@ const Signin = () => {
               )}
             </button>
           </div>
+        </div>
+        <div className={styles.container_3}>
+          <p>{`Don't have an account?`}</p>
+          <Link href={"/signup"}>Signup</Link>
+          <p>to continue</p>
         </div>
       </div>
     </>
