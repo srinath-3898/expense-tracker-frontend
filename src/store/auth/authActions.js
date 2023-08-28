@@ -1,11 +1,11 @@
+import api from "@/configs/apiConfig";
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import axios from "axios";
 
 export const signup = createAsyncThunk(
   "auth/signup",
   async (user, { rejectWithValue }) => {
     try {
-      const response = await axios.post(
+      const response = await api.post(
         "http://localhost:8080/user/signup",
         user
       );
@@ -23,10 +23,11 @@ export const signin = createAsyncThunk(
   "auth/signin",
   async (user, { rejectWithValue }) => {
     try {
-      const response = await axios.post(
+      const response = await api.post(
         "http://localhost:8080/user/signin",
         user
       );
+      localStorage.setItem("token", response.data?.data?.token);
       return response;
     } catch (error) {
       if (!error.response) {

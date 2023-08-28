@@ -9,7 +9,7 @@ import {
   LoadingOutlined,
 } from "@ant-design/icons";
 import { Spin, message } from "antd";
-import { resetAuthData } from "@/store/auth/authSlice";
+import { resetSigninAndSignupData } from "@/store/auth/authSlice";
 import Link from "next/link";
 
 const Signup = () => {
@@ -17,6 +17,7 @@ const Signup = () => {
 
   const {
     loading,
+    token,
     message: authMessage,
     error,
   } = useSelector((state) => state.auth);
@@ -50,8 +51,10 @@ const Signup = () => {
         ),
       });
     }
-    dispatch(resetAuthData());
+    dispatch(resetSigninAndSignupData());
   }, [authMessage, error]);
+
+  console.log(token);
 
   return (
     <>

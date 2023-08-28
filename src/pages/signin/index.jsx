@@ -9,15 +9,20 @@ import {
   CloseCircleFilled,
   LoadingOutlined,
 } from "@ant-design/icons";
-import { resetAuthData } from "@/store/auth/authSlice";
+import { resetSigninAndSignupData } from "@/store/auth/authSlice";
 import Link from "next/link";
+import { useRouter } from "next/router";
+import api from "@/configs/apiConfig";
 
 const Signin = () => {
   const dispatch = useDispatch();
+  const router = useRouter();
 
   const {
     loading,
+    token,
     message: authMessage,
+    user: userInfo,
     error,
   } = useSelector((state) => state.auth);
 
@@ -30,8 +35,19 @@ const Signin = () => {
   };
 
   const handleSigin = () => {
-    dispatch(signin(user));
+    dispatch(signin(user)).then((response) => {
+      if (response?.payload?.data?.status) {
+        api.defaults.headers.common["Authorization"] =
+          response?.payload?.data?.data?.token;
+      }
+    });
   };
+
+  useEffect(() => {
+    if (token && userInfo) {
+      router.push("/expenses");
+    }
+  }, [token, userInfo]);
 
   useEffect(() => {
     if (authMessage || error) {
@@ -44,7 +60,7 @@ const Signin = () => {
         ),
       });
     }
-    dispatch(resetAuthData());
+    dispatch(resetSigninAndSignupData());
   }, [authMessage, error]);
 
   return (
@@ -52,7 +68,7 @@ const Signin = () => {
       {contextHolder}
       <div className={styles.conatiner}>
         <div className={styles.conatiner_1}>
-          <h1>Login</h1>
+          <h1>Sign In</h1>
         </div>
         <div className={styles.container_2}>
           <div className={styles.input_controller}>

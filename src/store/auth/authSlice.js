@@ -6,14 +6,19 @@ const authSlice = createSlice({
   name: "auth",
   initialState: {
     loading: false,
+    token: null,
+    user: null,
     message: null,
     error: null,
   },
   reducers: {
-    resetAuthData: (state) => {
+    resetSigninAndSignupData: (state) => {
       state.loading = false;
       state.message = null;
       state.error = null;
+    },
+    setToken: (state, { payload }) => {
+      state.token = payload;
     },
   },
   extraReducers: (builder) => {
@@ -42,6 +47,8 @@ const authSlice = createSlice({
       })
       .addCase(signin.fulfilled, (state, { payload }) => {
         state.loading = false;
+        state.token = payload?.data?.data?.token;
+        state.user = payload?.data?.data?.user;
         state.message = payload?.data?.message;
       })
       .addCase(signin.rejected, (state, error) => {
@@ -56,4 +63,4 @@ const authSlice = createSlice({
 });
 
 export default authSlice.reducer;
-export const { resetAuthData } = authSlice.actions;
+export const { resetSigninAndSignupData, setToken } = authSlice.actions;

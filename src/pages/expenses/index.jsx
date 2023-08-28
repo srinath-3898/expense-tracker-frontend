@@ -8,8 +8,6 @@ import {
   deleteExpense,
   editExpense,
 } from "@/store/expense/expenseActions";
-import Loading from "./loading";
-import Spinner from "@/components/spinner/Spinner";
 import { Popconfirm, Spin, Tooltip, message } from "antd";
 import {
   CheckCircleFilled,
@@ -56,6 +54,7 @@ const Expenses = () => {
     dispatch(editExpense({ expenseId, expense })).then((response) => {
       if (response?.payload?.data?.status) dispatch(getAllExpenses());
     });
+    setExpenseId(null);
     setExpense({ amount: "", category: "movies", description: "" });
   };
 
@@ -170,11 +169,7 @@ const Expenses = () => {
         ) : (
           <></>
         )}
-        {loading && !expenses && !error ? (
-          <Loading fontSize={50} color={"black"} />
-        ) : (
-          <></>
-        )}
+        {loading && !expenses && !error ? <></> : <></>}
         {!loading && expenses && expenses?.length > 0 && !error ? (
           <div className={styles.container_3}>
             <div className={styles.container_3_box_1}>

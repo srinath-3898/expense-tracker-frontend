@@ -10,3 +10,13 @@
   align-items: center;
   gap: 20px;
 }
+
+.nav_link {
+  padding: 5px;
+  border-radius: 3px;
+}
+
+.active_nav_link {
+  color: white;
+  background-color: black;
+}
