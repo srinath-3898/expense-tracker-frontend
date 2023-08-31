@@ -7,6 +7,9 @@ import { LogoutOutlined } from "@ant-design/icons";
 import { Tooltip } from "antd";
 import { setToken } from "@/store/auth/authSlice";
 import { useRouter } from "next/router";
+import { createOrder } from "@/store/payment/paymentActions";
+import api from "@/configs/apiConfig";
+import { profile } from "@/store/auth/authActions";
 
 const authenticatedLinks = [
   { id: 1, title: "Home", url: "/" },
@@ -24,7 +27,7 @@ const Navbar = () => {
   const dispatch = useDispatch();
   const router = useRouter();
 
-  const { token } = useSelector((state) => state.auth);
+  const { token, user } = useSelector((state) => state.auth);
 
   const handleLogout = () => {
     localStorage.clear();
@@ -32,11 +35,69 @@ const Navbar = () => {
     router.push("/");
   };
 
+  const loadScript = () => {
+    return new Promise((resolve, reject) => {
+      const script = document.createElement("script");
+      script.src = "https://checkout.razorpay.com/v1/checkout.js";
+      script.onload = () => {
+        resolve(true);
+      };
+      script.onerror = () => {
+        reject(false);
+      };
+      document.body.appendChild(script);
+    });
+  };
+
+  const handleCreateOrder = async () => {
+    const orderId = `${user?.id}_${Date.now()}`;
+    dispatch(createOrder(orderId))
+      .then(async ({ payload }) => {
+        if (payload?.data?.status) {
+          const { rpOrderId } = payload?.data?.data;
+          const res = await loadScript();
+          if (res) {
+            const options = {
+              key: "rzp_test_HOTPHJrQjTkXoL",
+              order_id: rpOrderId,
+              handler: async (response) => {
+                await api.post("/payment/update-status", {
+                  rpOrderId: response?.razorpay_order_id,
+                  status: "SUCCESS",
+                });
+                dispatch(profile());
+              },
+            };
+            const rzp = new Razorpay(options);
+            rzp.open();
+            rzp.on("payment.failed", async (error) => {
+              await api.post("/payment/update-status", {
+                rpOrderId: error?.error?.metadata?.order_id,
+                status: "FAILED",
+              });
+            });
+          }
+        }
+      })
+      .catch((error) => console.log(error));
+  };
+
   return (
     <div className={styles.container}>
-      <Link href={"/"} className={styles?.logo}>
-        <Image src="/logo.png" width={50} height={50} alt="Logo" />
-      </Link>
+      <div className={styles.container_1}>
+        <Link href={"/"} className={styles?.logo}>
+          <Image src="/logo.png" width={50} height={50} alt="Logo" />
+        </Link>
+        {user && !user?.premiumUser ? (
+          <button className={styles.buy_premium} onClick={handleCreateOrder}>
+            Buy premium
+          </button>
+        ) : (
+          <div>
+            <p>You are a premium user </p>
+          </div>
+        )}
+      </div>
       <div className={styles.links}>
         {token ? (
           <>

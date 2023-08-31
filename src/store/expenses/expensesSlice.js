@@ -18,7 +18,11 @@ export const expensesSlice = createSlice({
       .addCase(getAllExpenses.rejected, (state, { error }) => {
         state.loading = false;
         state.expenses = null;
-        state.error = error?.message;
+        if (error?.payload) {
+          state.error = error?.payload?.data?.message;
+        } else {
+          state.error = error?.error?.message;
+        }
       });
   },
 });

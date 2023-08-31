@@ -1,14 +1,13 @@
 import api from "@/configs/apiConfig";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 
-export const getAllExpenses = createAsyncThunk(
-  "expenses/getAllExpenses",
-  async () => {
+export const createOrder = createAsyncThunk(
+  "payment/createPayment",
+  async (orderId, { rejectWithValue }) => {
     try {
-      api.defaults.headers.common[
-        "Authorization"
-      ] = `Bearer ${localStorage.getItem("token")}`;
-      const response = await api.get("/expense/expenses");
+      const response = await api.post("/payment/create-order", {
+        orderId,
+      });
       return response;
     } catch (error) {
       if (!error.response) {

@@ -8,7 +8,8 @@ import { Inter } from "next/font/google";
 import { store, wrapper } from "@/store/store";
 import { useEffect } from "react";
 import { useRouter } from "next/router";
-import { setToken } from "@/store/auth/authSlice";
+import { setToken, setUser } from "@/store/auth/authSlice";
+import { profile } from "@/store/auth/authActions";
 
 const inter = Inter({ subsets: ["latin"] });
 function App({ Component, pageProps }) {
@@ -16,8 +17,11 @@ function App({ Component, pageProps }) {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    if (localStorage.getItem("token")) {
+    if (localStorage.getItem("token") && localStorage.getItem("user")) {
       dispatch(setToken(localStorage.getItem("token")));
+      dispatch(setUser(JSON.parse(localStorage.getItem("user"))));
+    } else if (localStorage.getItem("token") && !localStorage.getItem("user")) {
+      dispatch(profile());
     } else {
       router.push("/signin");
     }

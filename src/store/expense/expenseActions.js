@@ -5,10 +5,7 @@ export const addExpense = createAsyncThunk(
   "expense/addExpense",
   async (expense, { rejectWithValue }) => {
     try {
-      const response = await api.post(
-        "http://localhost:8080/expense/add-expense",
-        expense
-      );
+      const response = await api.post("/expense/add-expense", expense);
       return response;
     } catch (error) {
       if (!error.response) {
@@ -24,7 +21,7 @@ export const editExpense = createAsyncThunk(
   async ({ expenseId, expense }, { rejectWithValue }) => {
     try {
       const response = await api.post(
-        `http://localhost:8080/expense/edit-expense/${expenseId}`,
+        `/expense/edit-expense/${expenseId}`,
         expense
       );
       return response;
@@ -41,9 +38,7 @@ export const deleteExpense = createAsyncThunk(
   "expense/deleteExpense",
   async (expenseId, { rejectWithValue }) => {
     try {
-      const response = await api.delete(
-        `http://localhost:8080/expense/delete-expense/${expenseId}`
-      );
+      const response = await api.delete(`/expense/delete-expense/${expenseId}`);
       return response;
     } catch (error) {
       if (!error.response) {
