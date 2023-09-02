@@ -34,7 +34,6 @@ const Expenses = () => {
     category: "movies",
     description: "",
   });
-
   const [expenseId, setExpenseId] = useState(null);
   const [messageApi, contextHolder] = message.useMessage();
 

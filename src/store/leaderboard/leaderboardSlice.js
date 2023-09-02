@@ -1,32 +1,30 @@
-import { createOrder } from "./paymentActions";
-
 const { createSlice } = require("@reduxjs/toolkit");
+const { getLeaderboard } = require("./leaderboardActions");
 
-const paymentSlice = createSlice({
-  name: "payment",
+const leaderboardSlice = createSlice({
+  name: "leaderboard",
   initialState: {
     loading: false,
-    message: null,
+    leaderboard: null,
     error: null,
   },
   reducers: {
-    resetPaymentData: (state) => {
+    resetLeaderboardData: (state) => {
       state.loading = false;
-      state.message = null;
+      state.leaderboard = null;
       state.error = null;
     },
   },
   extraReducers: (builder) => {
     builder
-      .addCase(createOrder.pending, (state) => {
+      .addCase(getLeaderboard.pending, (state) => {
         state.loading = true;
       })
-      .addCase(createOrder.fulfilled, (state, { payload }) => {
+      .addCase(getLeaderboard.fulfilled, (state, { payload }) => {
         state.loading = false;
-        console.log(payload);
-        state.message = payload?.data?.message;
+        state.leaderboard = payload?.data?.data;
       })
-      .addCase(createOrder.rejected, (state, error) => {
+      .addCase(getLeaderboard.rejected, (state, error) => {
         state.loading = false;
         if (error?.payload) {
           state.error = error?.payload?.data?.message;
@@ -37,5 +35,4 @@ const paymentSlice = createSlice({
   },
 });
 
-export default paymentSlice.reducer;
-export const { resetPaymentData } = paymentSlice.actions;
+export default leaderboardSlice.reducer;

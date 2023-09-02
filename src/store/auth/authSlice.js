@@ -70,7 +70,7 @@ const authSlice = createSlice({
       })
       .addCase(profile.fulfilled, (state, { payload }) => {
         state.loading = false;
-        state.user = payload?.data?.data?.user;
+        state.user = payload?.data?.data;
         state.message = payload?.data?.message;
       })
       .addCase(profile.rejected, (state, error) => {
