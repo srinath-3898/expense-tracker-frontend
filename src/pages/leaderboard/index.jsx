@@ -54,8 +54,8 @@ const Leaderboard = () => {
           </div>
           {leaderboard?.map((user) => (
             <div className={styles.container_2_box_2} key={user?.userId}>
-              <p>{user?.userId}</p>
-              <p>{user?.name}</p>
+              <p>{user?.id}</p>
+              <p>{user?.fullName}</p>
               <p>{user?.totalExpenses}</p>
             </div>
           ))}
