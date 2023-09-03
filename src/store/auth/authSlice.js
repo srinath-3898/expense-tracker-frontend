@@ -1,4 +1,10 @@
-import { forgotPassword, profile, signin, signup } from "./authActions";
+import {
+  forgotPassword,
+  profile,
+  resetPassword,
+  signin,
+  signup,
+} from "./authActions";
 
 const { createSlice } = require("@reduxjs/toolkit");
 
@@ -92,6 +98,24 @@ const authSlice = createSlice({
         state.message = payload?.data?.message;
       })
       .addCase(forgotPassword.rejected, (state, error) => {
+        state.loading = false;
+        if (error?.payload) {
+          state.error = error?.payload?.data?.message;
+        } else {
+          state.error = error?.error?.message;
+        }
+      });
+
+    //reset password
+    builder
+      .addCase(resetPassword.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(resetPassword.fulfilled, (state, { payload }) => {
+        state.loading = false;
+        state.message = payload?.data?.message;
+      })
+      .addCase(resetPassword.rejected, (state, error) => {
         state.loading = false;
         if (error?.payload) {
           state.error = error?.payload?.data?.message;

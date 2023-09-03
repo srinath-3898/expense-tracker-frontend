@@ -65,3 +65,21 @@ export const forgotPassword = createAsyncThunk(
     }
   }
 );
+
+export const resetPassword = createAsyncThunk(
+  "auth/resetPassword",
+  async ({ requestId, resetPasswordData }, { rejectWithValue }) => {
+    try {
+      const response = await api.post(
+        `/user/reset-password/${requestId}`,
+        resetPasswordData
+      );
+      return response;
+    } catch (error) {
+      if (!error.response) {
+        throw error;
+      }
+      return rejectWithValue(error.response);
+    }
+  }
+);

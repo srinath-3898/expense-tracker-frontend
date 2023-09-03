@@ -22,8 +22,6 @@ function App({ Component, pageProps }) {
       dispatch(setUser(JSON.parse(localStorage.getItem("user"))));
     } else if (localStorage.getItem("token") && !localStorage.getItem("user")) {
       dispatch(profile());
-    } else {
-      router.push("/signin");
     }
   }, []);
 
