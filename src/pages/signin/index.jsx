@@ -2,8 +2,8 @@
 import React, { useEffect, useState } from "react";
 import styles from "./Signin.module.css";
 import { useDispatch, useSelector } from "react-redux";
-import { signin } from "@/store/auth/authActions";
-import { Spin, message } from "antd";
+import { forgotPassword, signin } from "@/store/auth/authActions";
+import { Modal, Spin, message } from "antd";
 import {
   CheckCircleFilled,
   CloseCircleFilled,
@@ -27,6 +27,8 @@ const Signin = () => {
   } = useSelector((state) => state.auth);
 
   const [user, setUser] = useState({ email: "", password: "" });
+  const [forgotPasswordModalOpen, setForgotPasswordModalOpen] = useState(false);
+  const [forgotPasswordEmail, setForgotPasswordEmail] = useState("");
   const [messageApi, contextHolder] = message.useMessage();
 
   const handleChange = (event) => {
@@ -40,6 +42,13 @@ const Signin = () => {
         api.defaults.headers.common["Authorization"] =
           response?.payload?.data?.data?.token;
       }
+    });
+  };
+
+  const handleSendEmail = () => {
+    dispatch(forgotPassword(forgotPasswordEmail)).then(() => {
+      setForgotPasswordModalOpen(false);
+      setForgotPasswordEmail("");
     });
   };
 
@@ -82,7 +91,12 @@ const Signin = () => {
             />
           </div>
           <div className={styles.input_controller}>
-            <p>Password</p>
+            <div className={styles.password_title}>
+              <p>Password</p>
+              <p onClick={() => setForgotPasswordModalOpen(true)}>
+                Forgot password?
+              </p>
+            </div>
             <input
               type="password"
               placeholder="Please enter your password"
@@ -113,6 +127,50 @@ const Signin = () => {
           <p>to continue</p>
         </div>
       </div>
+      <Modal
+        title="Forgot password"
+        open={forgotPasswordModalOpen}
+        footer={null}
+        closable={true}
+        maskClosable={true}
+        onCancel={() => setForgotPasswordModalOpen(false)}
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        <div className={styles.forgot_password_modal}>
+          <div className={styles.input_controller}>
+            <p>Email</p>
+            <input
+              type="email"
+              placeholder="Please enter you email"
+              name="email"
+              value={forgotPasswordEmail}
+              onChange={(event) => setForgotPasswordEmail(event.target.value)}
+            />
+          </div>
+          <div className={styles.modal_footer}>
+            <button onClick={() => setForgotPasswordModalOpen(false)}>
+              Cancel
+            </button>
+            <button onClick={handleSendEmail} disabled={loading}>
+              {loading ? (
+                <Spin
+                  indicator={
+                    <LoadingOutlined
+                      style={{ color: "#ffffff", fontSize: "16px" }}
+                    />
+                  }
+                />
+              ) : (
+                "Send email"
+              )}
+            </button>
+          </div>
+        </div>
+      </Modal>
     </>
   );
 };

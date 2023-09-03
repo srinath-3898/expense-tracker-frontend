@@ -20,7 +20,20 @@
 
 .input_controller {
   display: grid;
-  grid-template-columns: 1fr 2fr;
+  gap: 15px;
+}
+
+.password_title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.password_title p:nth-child(2) {
+  color: #218bff;
+}
+.password_title p:nth-child(2):hover {
+  cursor: pointer;
 }
 
 .signin_button {
@@ -40,4 +53,19 @@
 .container_3 a {
   text-decoration: underline;
   color: gray;
+}
+
+.forgot_password_modal {
+  width: 20vw;
+  display: grid;
+  gap: 10px;
+}
+
+.modal_footer {
+  display: flex;
+  justify-content: space-around;
+}
+
+.modal_footer button {
+  width: 110px;
 }

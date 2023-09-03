@@ -48,3 +48,20 @@ export const profile = createAsyncThunk(
     }
   }
 );
+
+export const forgotPassword = createAsyncThunk(
+  "auth/forgotPassword",
+  async (forgotPasswordEmail, { rejectWithValue }) => {
+    try {
+      const response = await api.post("/user/forgot-password", {
+        forgotPasswordEmail,
+      });
+      return response;
+    } catch (error) {
+      if (!error.response) {
+        throw error;
+      }
+      return rejectWithValue(error.response);
+    }
+  }
+);

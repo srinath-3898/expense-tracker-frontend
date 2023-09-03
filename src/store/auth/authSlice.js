@@ -1,4 +1,4 @@
-import { profile, signin, signup } from "./authActions";
+import { forgotPassword, profile, signin, signup } from "./authActions";
 
 const { createSlice } = require("@reduxjs/toolkit");
 
@@ -74,6 +74,24 @@ const authSlice = createSlice({
         state.message = payload?.data?.message;
       })
       .addCase(profile.rejected, (state, error) => {
+        state.loading = false;
+        if (error?.payload) {
+          state.error = error?.payload?.data?.message;
+        } else {
+          state.error = error?.error?.message;
+        }
+      });
+
+    //forgot password
+    builder
+      .addCase(forgotPassword.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(forgotPassword.fulfilled, (state, { payload }) => {
+        state.loading = false;
+        state.message = payload?.data?.message;
+      })
+      .addCase(forgotPassword.rejected, (state, error) => {
         state.loading = false;
         if (error?.payload) {
           state.error = error?.payload?.data?.message;
