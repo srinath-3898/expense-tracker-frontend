@@ -28,6 +28,7 @@ const Expenses = () => {
     message: expenseMessage,
     error: expenseError,
   } = useSelector((state) => state.expense);
+  const { user } = useSelector((state) => state.auth);
 
   const [expense, setExpense] = useState({
     amount: "",
@@ -155,6 +156,11 @@ const Expenses = () => {
         {!loading && expenses && !error ? (
           <div className={styles.container_2}>
             <h2>Expenses</h2>
+            {user && user?.premiumUser ? (
+              <button>Download report</button>
+            ) : (
+              <></>
+            )}
           </div>
         ) : (
           <></>
