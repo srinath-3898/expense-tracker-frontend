@@ -18,3 +18,19 @@ export const getAllExpenses = createAsyncThunk(
     }
   }
 );
+
+export const downloadExpenses = createAsyncThunk(
+  "expenses/downloadExpenses",
+  async () => {
+    try {
+      const response = await api.get("/premium/download");
+      console.log(response);
+      return response;
+    } catch (error) {
+      if (!error.response) {
+        throw error;
+      }
+      return rejectWithValue(error.response);
+    }
+  }
+);

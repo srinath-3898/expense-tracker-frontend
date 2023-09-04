@@ -1,8 +1,11 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import styles from "./Expenses.module.css";
 import { useDispatch, useSelector } from "react-redux";
-import { getAllExpenses } from "@/store/expenses/expensesActions";
+import {
+  downloadExpenses,
+  getAllExpenses,
+} from "@/store/expenses/expensesActions";
 import {
   addExpense,
   deleteExpense,
@@ -18,11 +21,20 @@ import {
   WarningFilled,
 } from "@ant-design/icons";
 import { resetExpenseData } from "@/store/expense/expenseSlice";
+import Link from "next/link";
+import { resetDownloadExpensesData } from "@/store/expenses/expensesSlice";
 
 const Expenses = () => {
   const dispatch = useDispatch();
 
-  const { loading, expenses, error } = useSelector((state) => state.expenses);
+  const {
+    loading,
+    expenses,
+    downloadExpensesLoading,
+    url,
+    message: downloadExpensesMessage,
+    error,
+  } = useSelector((state) => state.expenses);
   const {
     loading: expenseLoading,
     message: expenseMessage,
@@ -37,6 +49,8 @@ const Expenses = () => {
   });
   const [expenseId, setExpenseId] = useState(null);
   const [messageApi, contextHolder] = message.useMessage();
+
+  const downloadRef = useRef(null);
 
   const handleInputChange = (event) => {
     const { name, value } = event.target;
@@ -69,27 +83,45 @@ const Expenses = () => {
     });
   };
 
+  const handleDownloadExpenses = () => {
+    dispatch(downloadExpenses());
+  };
+
   useEffect(() => {
     dispatch(getAllExpenses());
   }, []);
 
   useEffect(() => {
-    if (expenseMessage || expenseError) {
+    if (url) {
+      downloadRef.current.click();
+      dispatch(resetDownloadExpensesData());
+    }
+  }, [url]);
+
+  useEffect(() => {
+    if (expenseMessage || expenseError || url || downloadExpensesMessage) {
       messageApi.open({
-        content: expenseMessage ? expenseMessage : expenseError,
-        icon: expenseMessage ? (
-          <CheckCircleFilled style={{ color: "#00a300" }} />
-        ) : (
-          <CloseCircleFilled style={{ color: "red" }} />
-        ),
+        content: expenseMessage
+          ? expenseMessage
+          : expenseError
+          ? expenseError
+          : downloadExpensesMessage,
+        icon:
+          expenseMessage || url || downloadExpensesMessage ? (
+            <CheckCircleFilled style={{ color: "#00a300" }} />
+          ) : (
+            <CloseCircleFilled style={{ color: "red" }} />
+          ),
       });
     }
     dispatch(resetExpenseData());
-  }, [error, expenseMessage, expenseError]);
+    dispatch(resetDownloadExpensesData());
+  }, [error, expenseMessage, expenseError, url, downloadExpensesMessage]);
 
   return (
     <>
       {contextHolder}
+      {url ? <Link href={url} ref={downloadRef}></Link> : <></>}
       <div className={styles.container}>
         <div className={styles.container_1}>
           <h1>{expenseId ? "Edit expense" : "Add expense"}</h1>
@@ -157,7 +189,23 @@ const Expenses = () => {
           <div className={styles.container_2}>
             <h2>Expenses</h2>
             {user && user?.premiumUser ? (
-              <button>Download report</button>
+              <button
+                className={styles.download_expenses}
+                onClick={handleDownloadExpenses}
+                disabled={downloadExpensesLoading}
+              >
+                {downloadExpensesLoading ? (
+                  <Spin
+                    indicator={
+                      <LoadingOutlined
+                        style={{ color: "#ffffff", fontSize: "16px" }}
+                      />
+                    }
+                  />
+                ) : (
+                  "Download expenses"
+                )}
+              </button>
             ) : (
               <></>
             )}

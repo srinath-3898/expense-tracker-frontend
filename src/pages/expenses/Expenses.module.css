@@ -12,6 +12,12 @@
   gap: 20px;
 }
 
+.input_controller {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  align-items: center;
+}
+
 .container_2 {
   width: 50%;
   margin: auto;
@@ -20,10 +26,8 @@
   justify-content: space-between;
 }
 
-.input_controller {
-  display: grid;
-  grid-template-columns: 1fr 2fr;
-  align-items: center;
+.download_expenses {
+  width: 150px;
 }
 
 .container_3 {
