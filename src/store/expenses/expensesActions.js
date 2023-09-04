@@ -3,12 +3,14 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 
 export const getAllExpenses = createAsyncThunk(
   "expenses/getAllExpenses",
-  async () => {
+  async ({ pageSize, page }, { rejectWithValue }) => {
     try {
       api.defaults.headers.common[
         "Authorization"
       ] = `Bearer ${localStorage.getItem("token")}`;
-      const response = await api.get("/expense/expenses");
+      const response = await api.get(
+        `/expense/expenses?pageSize=${pageSize}&page=${page}`
+      );
       return response;
     } catch (error) {
       if (!error.response) {

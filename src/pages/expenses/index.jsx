@@ -48,6 +48,7 @@ const Expenses = () => {
     description: "",
   });
   const [expenseId, setExpenseId] = useState(null);
+  const [pageSize, setPageSize] = useState(5);
   const [messageApi, contextHolder] = message.useMessage();
 
   const downloadRef = useRef(null);
@@ -59,14 +60,15 @@ const Expenses = () => {
 
   const handleAddExpense = () => {
     dispatch(addExpense(expense)).then(() => {
-      dispatch(getAllExpenses());
+      dispatch(getAllExpenses({ pageSize, page: 1 }));
     });
     setExpense({ amount: "", category: "movies", description: "" });
   };
 
   const handleEditExpense = () => {
     dispatch(editExpense({ expenseId, expense })).then((response) => {
-      if (response?.payload?.data?.status) dispatch(getAllExpenses());
+      if (response?.payload?.data?.status)
+        dispatch(getAllExpenses({ pageSize, page: 1 }));
     });
     setExpenseId(null);
     setExpense({ amount: "", category: "movies", description: "" });
@@ -79,7 +81,8 @@ const Expenses = () => {
 
   const handleDeleteExpense = (expenseId) => {
     dispatch(deleteExpense(expenseId)).then((response) => {
-      if (response?.payload?.data?.status) dispatch(getAllExpenses());
+      if (response?.payload?.data?.status)
+        dispatch(getAllExpenses({ pageSize, page: 1 }));
     });
   };
 
@@ -88,7 +91,7 @@ const Expenses = () => {
   };
 
   useEffect(() => {
-    dispatch(getAllExpenses());
+    dispatch(getAllExpenses({ pageSize, page: 1 }));
   }, []);
 
   useEffect(() => {
@@ -188,6 +191,19 @@ const Expenses = () => {
         {!loading && expenses && !error ? (
           <div className={styles.container_2}>
             <h2>Expenses</h2>
+            <div className={styles.page_size}>
+              <p>Size</p>
+              <input
+                type="number"
+                onChange={(event) => setPageSize(event.target.value)}
+                value={pageSize}
+              />
+            </div>
+            <button
+              onClick={() => dispatch(getAllExpenses({ pageSize, page: 1 }))}
+            >
+              Get your expenses
+            </button>
             {user && user?.premiumUser ? (
               <button
                 className={styles.download_expenses}
@@ -223,7 +239,7 @@ const Expenses = () => {
           <></>
         )}
         {loading && !expenses && !error ? <></> : <></>}
-        {!loading && expenses && expenses?.length > 0 && !error ? (
+        {!loading && expenses && expenses?.data?.length > 0 && !error ? (
           <div className={styles.container_3}>
             <div className={styles.container_3_box_1}>
               <p>Description</p>
@@ -236,7 +252,7 @@ const Expenses = () => {
                 <p>Delete</p>
               </div>
             </div>
-            {expenses?.map((expense) => (
+            {expenses?.data?.map((expense) => (
               <div className={styles.container_3_box_2} key={expense?.id}>
                 <p>{expense?.description}</p>
                 <p>
@@ -276,9 +292,66 @@ const Expenses = () => {
         ) : (
           <></>
         )}
-        {!loading && expenses && expenses?.length === 0 ? (
+        {!loading && expenses && expenses?.data?.length === 0 && !error ? (
           <div className={styles.no_data}>
             <p>No expenses to display</p>
+          </div>
+        ) : (
+          <></>
+        )}
+        {expenses && expenses?.totalRecords > pageSize ? (
+          <div className={styles.pagination}>
+            <div className={styles.pagination_buttons}>
+              <button
+                onClick={() => dispatch(getAllExpenses({ pageSize, page: 1 }))}
+                disabled={loading || expenses?.currentPage === 1}
+              >
+                First page
+              </button>
+              <button
+                onClick={() =>
+                  dispatch(
+                    getAllExpenses({
+                      pageSize,
+                      page: expenses?.currentPage - 1,
+                    })
+                  )
+                }
+                disabled={loading || expenses?.currentPage === 1}
+              >
+                Previous page
+              </button>
+              <button
+                onClick={() =>
+                  dispatch(
+                    getAllExpenses({
+                      pageSize,
+                      page: expenses?.currentPage + 1,
+                    })
+                  )
+                }
+                disabled={
+                  loading || expenses?.currentPage === expenses?.lastPage
+                }
+              >
+                Next page
+              </button>
+              <button
+                onClick={() =>
+                  dispatch(
+                    getAllExpenses({
+                      pageSize,
+                      page: expenses?.lastPage,
+                    })
+                  )
+                }
+                disabled={
+                  loading || expenses?.currentPage === expenses?.lastPage
+                }
+              >
+                Last page
+              </button>
+            </div>
           </div>
         ) : (
           <></>

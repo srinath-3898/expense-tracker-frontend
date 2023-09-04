@@ -69,3 +69,32 @@
   justify-content: center;
   color: red;
 }
+
+.pagination {
+  width: 50%;
+  margin: auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.page_size {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.page_size input {
+  width: 60px;
+  padding: 5;
+}
+
+.pagination_buttons {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.pagination_buttons button {
+  width: 130px;
+}
