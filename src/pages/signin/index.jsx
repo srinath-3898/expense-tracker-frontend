@@ -72,6 +72,8 @@ const Signin = () => {
     dispatch(resetSigninAndSignupData());
   }, [authMessage, error]);
 
+  console.log(authMessage);
+
   return (
     <>
       {contextHolder}
