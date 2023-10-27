@@ -253,7 +253,7 @@ const Expenses = () => {
               </div>
             </div>
             {expenses?.data?.map((expense) => (
-              <div className={styles.container_3_box_2} key={expense?.id}>
+              <div className={styles.container_3_box_2} key={expense?._id}>
                 <p>{expense?.description}</p>
                 <p>
                   {expense?.category[0]?.toUpperCase() +
@@ -263,7 +263,7 @@ const Expenses = () => {
                 <Tooltip title="Edit expense">
                   <EditOutlined
                     onClick={() => {
-                      setExpenseId(expense?.id);
+                      setExpenseId(expense?._id);
                       setExpense({
                         amount: expense?.amount,
                         category: expense?.category,
@@ -279,7 +279,7 @@ const Expenses = () => {
                   description="Are you sure to delete this expense?"
                   okText="Yes"
                   cancelText="No"
-                  onConfirm={() => handleDeleteExpense(expense?.id)}
+                  onConfirm={() => handleDeleteExpense(expense?._id)}
                   icon={<WarningFilled style={{ color: "red" }} />}
                 >
                   <Tooltip title="Delete expense">
