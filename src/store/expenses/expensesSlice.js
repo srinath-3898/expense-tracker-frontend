@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { downloadExpenses, getAllExpenses } from "./expensesActions";
+import { downloadExpenses, getAllExpenses } from "./expenses-actions";
 
 export const expensesSlice = createSlice({
   name: "expenses",

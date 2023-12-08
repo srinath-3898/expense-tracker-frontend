@@ -9,7 +9,7 @@ export const getAllExpenses = createAsyncThunk(
         "Authorization"
       ] = `Bearer ${localStorage.getItem("token")}`;
       const response = await api.get(
-        `/expense/expenses?pageSize=${pageSize}&page=${page}`
+        `/expenses?pageSize=${pageSize}&page=${page}`
       );
       return response;
     } catch (error) {

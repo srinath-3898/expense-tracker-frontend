@@ -5,12 +5,12 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   downloadExpenses,
   getAllExpenses,
-} from "@/store/expenses/expensesActions";
+} from "@/store/expenses/expenses-actions";
 import {
   addExpense,
   deleteExpense,
   editExpense,
-} from "@/store/expense/expenseActions";
+} from "@/store/expense/expense-actions";
 import { Popconfirm, Spin, Tooltip, message } from "antd";
 import {
   CheckCircleFilled,
@@ -20,7 +20,7 @@ import {
   LoadingOutlined,
   WarningFilled,
 } from "@ant-design/icons";
-import { resetExpenseData } from "@/store/expense/expenseSlice";
+import { resetExpenseData } from "@/store/expense/expense-slice";
 import Link from "next/link";
 import { resetDownloadExpensesData } from "@/store/expenses/expensesSlice";
 
@@ -80,6 +80,7 @@ const Expenses = () => {
   };
 
   const handleDeleteExpense = (expenseId) => {
+    console.log(expenseId);
     dispatch(deleteExpense(expenseId)).then((response) => {
       if (response?.payload?.data?.status)
         dispatch(getAllExpenses({ pageSize, page: 1 }));

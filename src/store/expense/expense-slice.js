@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { addExpense, deleteExpense, editExpense } from "./expenseActions";
+import { addExpense, deleteExpense, editExpense } from "./expense-actions";
 
 export const expenseSlice = createSlice({
   name: "expense",
